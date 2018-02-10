@@ -11,6 +11,11 @@ Step 1: Download the CLEVR_v1.0 dataset
 
 Step 2: Point to that location in the `datasets.py` file
 
-Step 3: Run `datasets.py` file which will create a directory structure as mentioned in the file itsef.
+Step 3: Run `python datasets.py` file which will create a directory structure as mentioned in the file itsef. This takes a while to complete.
 
 Step 4: Run `python trainer.py`
+
+
+## TODOs:
+1) Create a `DataLoader` for CLEVR dataset.
+
