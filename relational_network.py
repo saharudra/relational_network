@@ -24,6 +24,7 @@ class RelationalNetwork(nn.Module):
         self.use_cuda = cfg.TRAIN.USE_CUDA # Can be set using args and thus can be substituted
         self.rnn_type = cfg.TRAIN.RNN_TYPE
         self.n_layers = 1
+        self.num_gpus = int(torch.cuda.device_count())
 
         # Define the word embedding for the input questions
         self.question_embeddings = nn.Embedding(self.vocab_size, self.embedding_dim, padding_idx=0)
@@ -45,8 +46,8 @@ class RelationalNetwork(nn.Module):
 
             # As I am using 4 GPUs
             if x == None:
-                return (Variable(torch.zeros(self.n_layers, self.batch_size / 4, self.question_vector_size)),
-                        Variable(torch.zeros(self.n_layers, self.batch_size / 4, self.question_vector_size)))
+                return (Variable(torch.zeros(self.n_layers, self.batch_size / self.num_gpus, self.question_vector_size)),
+                        Variable(torch.zeros(self.n_layers, self.batch_size / self.num_gpus, self.question_vector_size)))
             else:
                 return (Variable(x[0].data), Variable(x[1].data))  # TODO: Problem might be here
 
@@ -75,11 +76,11 @@ class RelationalNetwork(nn.Module):
         self.coord_oj = Variable(self.coord_oj)
         # For preparing the coord tensor, use the '1' dim as 64 because the size of the conv_feature_map
         # is [BS x 24 x 8 x 8] thus forming a 64 object feature map for each image of the mini-batch.
-        self.coord_tensor = torch.FloatTensor(self.batch_size / 4, 64, 2)
+        self.coord_tensor = torch.FloatTensor(self.batch_size / self.num_gpus, 64, 2)
         if self.use_cuda:
             self.coord_tensor = self.coord_tensor.cuda()
         self.coord_tensor = Variable(self.coord_tensor)
-        np_coord_tensor = np.zeros((self.batch_size / 4, 64, 2))
+        np_coord_tensor = np.zeros((self.batch_size / self.num_gpus, 64, 2))
         for obj in range(64):
             np_coord_tensor[:, obj, :] = np.array(self.cvt_coord(obj))
         self.coord_tensor.data.copy_(torch.from_numpy(np_coord_tensor))
@@ -109,7 +110,7 @@ class RelationalNetwork(nn.Module):
         # The code below is adopted from:
         # https://github.com/kimhc6028/relational-networks
         # Instead of using for loops, accessing the objects for g_theta in a vectorized manner.
-        mb = self.batch_size / 4
+        mb = self.batch_size / self.num_gpus
         num_channels = self.conv_layer_channels[-1]
         d = x.size()[2]
 
