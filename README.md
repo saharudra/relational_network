@@ -13,7 +13,8 @@ Step 2: Point to that location in the `datasets.py` file
 
 Step 3: Run `python datasets.py` file which will create a directory structure as mentioned in the file itsef. This takes a while to complete.
 
-Step 4: Run `python trainer.py`
+Step 4: Run `python trainer.py --batch_size <batch size> --epochs <epochs>`
+        Default batch size and number of epochs are 256 and 800 respectively.
 
 
 ## TODOs:
