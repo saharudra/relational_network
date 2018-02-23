@@ -176,11 +176,12 @@ for epoch in range(1, args.epochs + 1):
     
     # Call the train and the test step for the dataset
     epoch_loss, epoch_accuracy = train(updates_per_epoch)
-    log_line_train = '%s: %s; %s: %s; ' % ("Training Loss", epoch_loss, "Training Accuracy", epoch_accuracy)
+    log_line_train = '%s: %0.4f; %s: %0.4f; ' % ("Training Loss", epoch_loss, "Training Accuracy", epoch_accuracy)
     val_accuracy = val(updates_per_epoch_val)
-    log_line_val = '%s: %s ' % ("Validation Accuracy", val_accuracy)
+    log_line_val = '%s: %0.4f ' % ("Validation Accuracy", val_accuracy)
     epoch_end_time = time.time()
     time_taken = epoch_end_time - epoch_start_time
-    log_time_line = '%s: %s' % ("Time taken for the current epoch", time_taken)
-    print("Epoch %d | " % (epoch) + log_line_train + log_line_val + log_time_line)
+    log_time_line = '%s: %0.4f' % ("Time taken for the current epoch", time_taken)
     sys.stdout.flush()
+    print("Epoch %d | " % (epoch) + log_line_train + log_line_val + log_time_line)
+

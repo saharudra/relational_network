@@ -46,15 +46,15 @@ def random_crop_rotate(img):
     left_offset = np.random.randint(0, 9)
     top_offset = np.random.randint(0, 9)
     new_img = img[left_offset:left_offset + 128, top_offset: top_offset+128, :]
-    num_cols, num_rows = new_img.shape[0], new_img.shape[1]
 
-    # Find the degree by which the image has to be rotated
-    rad = random.uniform(-0.05, 0.05)
-    degrees = math.degrees(rad)
-
-    # Get the rotation matrix to rotate the image
-    rotation_matrix = cv2.getRotationMatrix2D((num_cols/2, num_rows/2), degrees, 1)
-    new_img = cv2.warpAffine(img, rotation_matrix, (num_cols, num_rows))
+    # # Find the degree by which the image has to be rotated
+    # rad = random.uniform(-0.05, 0.05)
+    # degrees = math.degrees(rad)
+    #
+    # # Get the rotation matrix to rotate the image
+    # num_cols, num_rows = new_img.shape[0], new_img.shape[1]
+    # rotation_matrix = cv2.getRotationMatrix2D((num_cols/2, num_rows/2), degrees, 1)
+    # new_img = cv2.warpAffine(img, rotation_matrix, (num_cols, num_rows))
     return new_img
 
 # Need to create the dictionary for the questions and encode them to integers here.
@@ -89,6 +89,7 @@ for data_part in data_set:
         # Downsample and pad images
         img = downsample_pad(img)
 
+        # TODO: Not rotating the image based  upon Kim's comment
         # Random crop and rotate images
         img = random_crop_rotate(img)
 
